@@ -11,7 +11,7 @@ class RepositoryList extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/components.json`, {
+    fetch(`https://superbull.github.io/open-source-react-ui-components/components.json`, {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
