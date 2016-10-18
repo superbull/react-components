@@ -1,3 +1,5 @@
+// react components
+
 class LoadingSpinner extends React.Component {
   render() {
     const { opts } = this.props
@@ -31,6 +33,7 @@ LoadingSpinner.defaultProps = {
   },
 }
 
+//=======================================================
 
 const NavBar = (props) => (
   <nav className="navbar navbar-default navbar-fixed-top">
@@ -54,11 +57,13 @@ const NavBar = (props) => (
   </nav>
 )
 
+//=======================================================
 
 const SearchBar = (props) => (
   <form>
     <div className="form-group">
       <input
+        value={props.searchText}
         onChange={(e) => {
           props.handleSearch(e.target.value)
         }}
@@ -70,19 +75,28 @@ const SearchBar = (props) => (
   </form>
 )
 
+//=======================================================
 
 const TagsBar = (props) => (
-  <div>
-    {props.tags.map(tag => (
-      <span 
-        className="label label-default"
-        onClick={() => props.toggleTag(tag)}
-      >
-        {tag}
-      </span>
-    ))}
+  <div className="tags-bar">
+    {props.tags.map(tag => {
+      const labelClass = 
+        props.selectedTags.includes(tag) ? 
+        'label label-success' :
+        'label label-default'
+      return (
+        <span 
+          className={labelClass}
+          onClick={() => props.toggleTag(tag)}
+        >
+          {tag}
+        </span>
+      )
+    })}
   </div>
 )
+
+//=======================================================
 
 const RepositoryList = (props) => (
   <ul className="list-group">
@@ -103,6 +117,7 @@ const RepositoryList = (props) => (
   </ul>
 )
 
+//=======================================================
 
 class UIRepository extends React.Component {
   constructor(props) {
@@ -118,6 +133,7 @@ class UIRepository extends React.Component {
 
     this.handleSearch = this.handleSearch.bind(this)
     this.toggleTag = this.toggleTag.bind(this)
+    this.getFilteredRepoIds = this.getFilteredRepoIds.bind(this)
   }
 
   componentDidMount() {
@@ -150,26 +166,49 @@ class UIRepository extends React.Component {
   }
 
   handleSearch(searchText) {
-    if (searchText == '') {
-      this.setState(({repos}) => ({
-        filteredRepoIds: repos.keySeq().toJS(),
-      }))
-    } else {
-      const fuse = new Fuse(this.state.repos.toList().toJS(), {
-        keys: ['full_name', 'description'],
-        id: 'id',
-      })
-      this.setState({
-        filteredRepoIds: fuse.search(searchText),
-      })
-    }
+    this.setState({
+      search: searchText
+    })
   }
 
   toggleTag(tag) {
     if (this.state.selectedTags.includes(tag)) {
-      console.log('include')
+      this.setState({
+        selectedTags: this.state.selectedTags.filter(selectedTag => selectedTag != tag)
+      })
     } else {
-      console.log('not include')
+      this.setState({
+        selectedTags: this.state.selectedTags.push(tag)
+      })
+    }
+  }
+
+  getFilteredRepoIds() {
+    const {
+      search,
+      repos,
+      selectedTags,
+    } = this.state
+
+    let filteredRepos = repos
+
+    // filter by tags
+    if (selectedTags.length != 0) {
+      filteredRepos = filteredRepos.filter(repo => {
+        const tags = repo.get('tags')
+        return selectedTags.reduce((prev, current) => prev && tags.includes(current), true)
+      })
+    }
+
+    // filter by search
+    if (search == '') {
+      return filteredRepos.keySeq().toJS()
+    } else {
+      const fuse = new Fuse(filteredRepos.toList().toJS(), {
+        keys: ['full_name', 'description'],
+        id: 'id',
+      })
+      return fuse.search(search)
     }
   }
 
@@ -177,20 +216,26 @@ class UIRepository extends React.Component {
     const {
       search,
       repos,
-      filteredRepoIds,
       isLoading,
       tags,
+      selectedTags,
     } = this.state
 
     const Loading = isLoading ? <LoadingSpinner /> : ''
+
+    const filteredRepoIds = this.getFilteredRepoIds()
 
     return (
       <div>
         <NavBar />
         <div className="container">
-          <SearchBar handleSearch={this.handleSearch} />
+          <SearchBar
+            searchText={search}
+            handleSearch={this.handleSearch}
+          />
           <TagsBar 
             tags={tags.toJS()}
+            selectedTags={selectedTags.toJS()}
             toggleTag={this.toggleTag}
           />
           {Loading}

@@ -6,6 +6,7 @@ const getRepoInfo = function(repo) {
   }).then(function (response) {
     return response.json()
   }).then(function (data) {
+    data.tags = repo.tags
     return data
   }).catch(function(error) {
     console.log(error)
