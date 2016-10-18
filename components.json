@@ -10,5 +10,9 @@
   {
     "owner": "gaearon",
     "repo": "react-dnd"
+  },
+  {
+    "owner": "callemall",
+    "repo": "material-ui"
   }
 ]
