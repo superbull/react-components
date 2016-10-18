@@ -1,1 +1,1 @@
-# open-source-react-ui-components
+# react-ui-components

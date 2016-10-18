@@ -109,7 +109,7 @@ class UIRepository extends React.Component {
       isLoading: true,
     }))
 
-    fetch(`https://superbull.github.io/open-source-react-ui-components/components.json`, {
+    fetch(`https://superbull.github.io/react-ui-components/components.json`, {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
