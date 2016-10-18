@@ -71,6 +71,19 @@ const SearchBar = (props) => (
 )
 
 
+const TagsBar = (props) => (
+  <div>
+    {props.tags.map(tag => (
+      <span 
+        className="label label-default"
+        onClick={() => props.toggleTag(tag)}
+      >
+        {tag}
+      </span>
+    ))}
+  </div>
+)
+
 const RepositoryList = (props) => (
   <ul className="list-group">
     {props.filteredRepoIds.map(id => (
@@ -99,9 +112,12 @@ class UIRepository extends React.Component {
       search: '',
       filteredRepoIds: [],
       isLoading: false,
+      tags: Immutable.fromJS([]),
+      selectedTags: Immutable.fromJS([]),
     }
 
     this.handleSearch = this.handleSearch.bind(this)
+    this.toggleTag = this.toggleTag.bind(this)
   }
 
   componentDidMount() {
@@ -116,6 +132,10 @@ class UIRepository extends React.Component {
     }).then(response => {
       return response.json()
     }).then(repos => {
+      this.setState({
+        tags: repos.reduce((pre, current) => pre.merge(current.tags), Immutable.fromJS([]))
+      })
+
       Promise.all(repos.map(getRepoInfo)).then(values => {
         this.setState(({repos}) => ({
           repos: repos.merge(Immutable.Map(values.map(value => [value.id, Immutable.fromJS(value)]))),
@@ -145,12 +165,21 @@ class UIRepository extends React.Component {
     }
   }
 
+  toggleTag(tag) {
+    if (this.state.selectedTags.includes(tag)) {
+      console.log('include')
+    } else {
+      console.log('not include')
+    }
+  }
+
   render() {
     const {
       search,
       repos,
       filteredRepoIds,
       isLoading,
+      tags,
     } = this.state
 
     const Loading = isLoading ? <LoadingSpinner /> : ''
@@ -160,6 +189,10 @@ class UIRepository extends React.Component {
         <NavBar />
         <div className="container">
           <SearchBar handleSearch={this.handleSearch} />
+          <TagsBar 
+            tags={tags.toJS()}
+            toggleTag={this.toggleTag}
+          />
           {Loading}
           <RepositoryList
             filteredRepoIds={filteredRepoIds}
