@@ -1,18 +1,22 @@
 [
   {
     "owner": "JedWatson",
-    "repo": "react-select"
+    "repo": "react-select",
+    "tags": ["ui"]
   },
   {
     "owner": "Hacker0x01",
-    "repo": "react-datepicker"
+    "repo": "react-datepicker",
+    "tags": ["ui"]
   },
   {
     "owner": "gaearon",
-    "repo": "react-dnd"
+    "repo": "react-dnd",
+    "tags": ["ui"]
   },
   {
     "owner": "callemall",
-    "repo": "material-ui"
+    "repo": "material-ui",
+    "tags": ["ui", "framework"]
   }
 ]
