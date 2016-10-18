@@ -13,6 +13,6 @@ const getRepoInfo = function(repo) {
 }
 
 ReactDOM.render(
-  <RepositoryList />,
+  <UIRepository />,
   document.getElementById('app')
 )
