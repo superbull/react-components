@@ -42,7 +42,7 @@ const NavBar = (props) => (
           <span className="icon-bar"></span>
           <span className="icon-bar"></span>
         </button>
-        <a className="navbar-brand" href="#">React UI Components</a>
+        <a className="navbar-brand" href="#">React Components</a>
       </div>
       <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul className="nav navbar-nav">
@@ -109,7 +109,7 @@ class UIRepository extends React.Component {
       isLoading: true,
     }))
 
-    fetch(`https://raw.githubusercontent.com/superbull/react-ui-components/master/components.json`, {
+    fetch(`https://raw.githubusercontent.com/superbull/react-components/master/components.json`, {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
