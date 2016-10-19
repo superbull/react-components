@@ -125,7 +125,6 @@ class UIRepository extends React.Component {
     this.state = {
       repos: Immutable.fromJS({}),
       search: '',
-      filteredRepoIds: [],
       isLoading: false,
       tags: Immutable.fromJS([]),
       selectedTags: Immutable.fromJS([]),
@@ -156,7 +155,6 @@ class UIRepository extends React.Component {
         this.setState(({repos}) => ({
           repos: repos.merge(Immutable.Map(values.map(value => [value.id, Immutable.fromJS(value)]))),
           search: '',
-          filteredRepoIds: values.map(value => value.id),
           isLoading: false,
         }))
       })
