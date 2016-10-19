@@ -98,22 +98,48 @@ const TagsBar = (props) => (
 
 //=======================================================
 
+const SortBy = (props) => (
+  <div className="sort-bar pull-right">
+    Sort By:{' '}
+    <div className="btn-group" role="group">
+      <button
+        type="button"
+        className="btn btn-sm btn-default"
+        disabled={props.sortBy == 'full_name'}
+        onClick={() => props.onSortBy('full_name')}
+      >
+        Name
+      </button>
+      <button
+        type="button"
+        className="btn btn-sm btn-default"
+        disabled={props.sortBy == 'stargazers_count'}
+        onClick={() => props.onSortBy('stargazers_count')}
+      >
+        Star
+      </button>
+    </div>
+  </div>
+)
+
+//=======================================================
+
 const RepositoryList = (props) => (
   <ul className="list-group">
-    {props.filteredRepoIds.map(id => (
+    {props.repos.map(repo => (
       <li className="list-group-item">
         <span className="badge">
           <span
             className="glyphicon glyphicon-star"
             aria-hidden="true"
-          /> {props.repos.getIn([id, 'stargazers_count'])}
+          /> {repo.get('stargazers_count')}
         </span>
         <h4 className="list-group-item-heading">
-          <a href={props.repos.getIn([id, 'html_url'])}>{props.repos.getIn([id, 'full_name'])}</a>
+          <a href={repo.get('html_url')}>{repo.get('full_name')}</a>
         </h4>
-        <p className="list-group-item-text">{props.repos.getIn([id, 'description'])}</p>
+        <p className="list-group-item-text">{repo.get('description')}</p>
         <p className="list-group-item-text">
-          {props.repos.getIn([id, 'tags']).map(tag => (
+          {repo.get('tags').map(tag => (
             <span 
               className="label label-warning"
             >
@@ -132,16 +158,18 @@ class UIRepository extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      repos: Immutable.fromJS({}),
+      repos: Immutable.fromJS([]),
       search: '',
       isLoading: false,
       tags: Immutable.fromJS([]),
       selectedTags: Immutable.fromJS([]),
+      sortBy: 'full_name',    // full_name, stargazers_count
     }
 
     this.handleSearch = this.handleSearch.bind(this)
     this.toggleTag = this.toggleTag.bind(this)
-    this.getFilteredRepoIds = this.getFilteredRepoIds.bind(this)
+    this.getFilteredRepos = this.getFilteredRepos.bind(this)
+    this.handleSortBy = this.handleSortBy.bind(this)
   }
 
   componentDidMount() {
@@ -162,7 +190,7 @@ class UIRepository extends React.Component {
 
       Promise.all(repos.map(getRepoInfo)).then(values => {
         this.setState(({repos}) => ({
-          repos: repos.merge(Immutable.Map(values.map(value => [value.id, Immutable.fromJS(value)]))),
+          repos: Immutable.fromJS(values),
           search: '',
           isLoading: false,
         }))
@@ -190,7 +218,7 @@ class UIRepository extends React.Component {
     }
   }
 
-  getFilteredRepoIds() {
+  getFilteredRepos() {
     const {
       search,
       repos,
@@ -201,7 +229,6 @@ class UIRepository extends React.Component {
 
     // filter by tags
     if (selectedTags.size != 0) {
-      console.log('in')
       filteredRepos = filteredRepos.filter(repo => {
         const tags = repo.get('tags')
         return selectedTags.reduce((prev, current) => prev || tags.includes(current), false)
@@ -209,15 +236,20 @@ class UIRepository extends React.Component {
     }
 
     // filter by search
-    if (search == '') {
-      return filteredRepos.keySeq().toJS()
-    } else {
+    if (search != '') {
       const fuse = new Fuse(filteredRepos.toList().toJS(), {
         keys: ['full_name', 'description'],
-        id: 'id',
       })
-      return fuse.search(search)
+      filteredRepos = fuse.search(search)
     }
+
+    return filteredRepos
+  }
+
+  handleSortBy(sortBy) {
+    this.setState({
+      sortBy: sortBy,
+    })
   }
 
   render() {
@@ -227,11 +259,18 @@ class UIRepository extends React.Component {
       isLoading,
       tags,
       selectedTags,
+      sortBy,
     } = this.state
 
     const Loading = isLoading ? <LoadingSpinner /> : ''
 
-    const filteredRepoIds = this.getFilteredRepoIds()
+    const filteredRepos = this.getFilteredRepos()
+    const sortedRepos = sortBy == 'stargazers_count' ? 
+      filteredRepos.sortBy(
+        repo => repo.get('stargazers_count'),
+        (a, b) => b - a
+      ) :
+      filteredRepos.sortBy(repo => repo.get('full_name').toLowerCase())
 
     return (
       <div>
@@ -247,10 +286,17 @@ class UIRepository extends React.Component {
             toggleTag={this.toggleTag}
           />
           {Loading}
-          <RepositoryList
-            filteredRepoIds={filteredRepoIds}
-            repos={repos}
-          />
+          <div className="panel panel-default">
+            <div className="panel-heading clearfix">
+              <SortBy
+                sortBy={sortBy}
+                onSortBy={this.handleSortBy}
+              />
+            </div>
+            <RepositoryList
+              repos={sortedRepos}
+            />
+          </div>
         </div>
       </div>
     )
