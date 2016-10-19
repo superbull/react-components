@@ -240,7 +240,7 @@ class UIRepository extends React.Component {
       const fuse = new Fuse(filteredRepos.toList().toJS(), {
         keys: ['full_name', 'description'],
       })
-      filteredRepos = fuse.search(search)
+      filteredRepos = Immutable.fromJS(fuse.search(search))
     }
 
     return filteredRepos
