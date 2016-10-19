@@ -236,11 +236,11 @@ class UIRepository extends React.Component {
     }
 
     // filter by search
-    if (search != '') {
+    if (search.trim() != '') {
       const fuse = new Fuse(filteredRepos.toList().toJS(), {
         keys: ['full_name', 'description'],
       })
-      filteredRepos = Immutable.fromJS(fuse.search(search))
+      filteredRepos = Immutable.fromJS(fuse.search(search.trim()))
     }
 
     return filteredRepos
