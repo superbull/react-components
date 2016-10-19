@@ -53,5 +53,40 @@
     "owner": "react-bootstrap",
     "repo": "react-bootstrap",
     "tags": ["framework"]
+  },
+  {
+    "owner": "elementalui",
+    "repo": "elemental",
+    "tags": ["framework"]
+  },
+  {
+    "owner": "nikgraf",
+    "repo": "belle",
+    "tags": ["framework"]
+  },
+  {
+    "owner": "otissv",
+    "repo": "react-uikit-components",
+    "tags": ["framework"]
+  },
+  {
+    "owner": "searchkit",
+    "repo": "searchkit",
+    "tags": ["framework"]
+  },
+  {
+    "owner": "jxnblk",
+    "repo": "rebass",
+    "tags": ["framework"]
+  },
+  {
+    "owner": "grommet",
+    "repo": "grommet",
+    "tags": ["framework"]
+  },
+  {
+    "owner": "reactstrap",
+    "repo": "reactstrap",
+    "tags": ["framework"]
   }
 ]
