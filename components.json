@@ -2,21 +2,56 @@
   {
     "owner": "JedWatson",
     "repo": "react-select",
-    "tags": ["ui"]
+    "tags": ["form", "select"]
   },
   {
     "owner": "Hacker0x01",
     "repo": "react-datepicker",
-    "tags": ["ui"]
+    "tags": ["form", "date / time picker"]
   },
   {
     "owner": "gaearon",
     "repo": "react-dnd",
-    "tags": ["ui"]
+    "tags": ["drag and drop"]
   },
   {
     "owner": "callemall",
     "repo": "material-ui",
-    "tags": ["ui", "framework"]
+    "tags": ["framework"]
+  },
+  {
+    "owner": "igorprado",
+    "repo": "react-notification-system",
+    "tags": ["notification"]
+  },
+  {
+    "owner": "intljusticemission",
+    "repo": "react-big-calendar",
+    "tags": ["date / time picker"]
+  },
+  {
+    "owner": "BelkaLab",
+    "repo": "react-yearly-calendar",
+    "tags": ["date / time picker"]
+  },
+  {
+    "owner": "okonet",
+    "repo": "react-dropzone",
+    "tags": ["drag and drop", "upload"]
+  },
+  {
+    "owner": "furqanZafar",
+    "repo": "react-selectize",
+    "tags": ["form", "select"]
+  },
+  {
+    "owner": "Lobos",
+    "repo": "react-ui",
+    "tags": ["framework"]
+  },
+  {
+    "owner": "react-bootstrap",
+    "repo": "react-bootstrap",
+    "tags": ["framework"]
   }
 ]
