@@ -112,6 +112,15 @@ const RepositoryList = (props) => (
           <a href={props.repos.getIn([id, 'html_url'])}>{props.repos.getIn([id, 'full_name'])}</a>
         </h4>
         <p className="list-group-item-text">{props.repos.getIn([id, 'description'])}</p>
+        <p className="list-group-item-text">
+          {props.repos.getIn([id, 'tags']).map(tag => (
+            <span 
+              className="label label-warning"
+            >
+              {tag}
+            </span>
+          ))}
+        </p>
       </li>
     ))}
   </ul>
@@ -148,7 +157,7 @@ class UIRepository extends React.Component {
       return response.json()
     }).then(repos => {
       this.setState({
-        tags: repos.reduce((pre, current) => pre.merge(current.tags), Immutable.fromJS([]))
+        tags: repos.reduce((pre, current) => pre.union(current.tags), Immutable.Set([]))
       })
 
       Promise.all(repos.map(getRepoInfo)).then(values => {
@@ -191,10 +200,11 @@ class UIRepository extends React.Component {
     let filteredRepos = repos
 
     // filter by tags
-    if (selectedTags.length != 0) {
+    if (selectedTags.size != 0) {
+      console.log('in')
       filteredRepos = filteredRepos.filter(repo => {
         const tags = repo.get('tags')
-        return selectedTags.reduce((prev, current) => prev && tags.includes(current), true)
+        return selectedTags.reduce((prev, current) => prev || tags.includes(current), false)
       })
     }
 
@@ -232,7 +242,7 @@ class UIRepository extends React.Component {
             handleSearch={this.handleSearch}
           />
           <TagsBar 
-            tags={tags.toJS()}
+            tags={tags.sortBy(tag => tag).toJS()}
             selectedTags={selectedTags.toJS()}
             toggleTag={this.toggleTag}
           />
