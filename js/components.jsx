@@ -285,7 +285,6 @@ class UIRepository extends React.Component {
             selectedTags={selectedTags.toJS()}
             toggleTag={this.toggleTag}
           />
-          {Loading}
           <div className="panel panel-default">
             <div className="panel-heading clearfix">
               <SortBy
@@ -293,6 +292,7 @@ class UIRepository extends React.Component {
                 onSortBy={this.handleSortBy}
               />
             </div>
+            {Loading}
             <RepositoryList
               repos={sortedRepos}
             />
