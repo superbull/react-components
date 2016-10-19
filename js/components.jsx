@@ -163,7 +163,7 @@ class UIRepository extends React.Component {
       isLoading: false,
       tags: Immutable.fromJS([]),
       selectedTags: Immutable.fromJS([]),
-      sortBy: 'full_name',    // full_name, stargazers_count
+      sortBy: 'stargazers_count',    // full_name, stargazers_count
     }
 
     this.handleSearch = this.handleSearch.bind(this)
