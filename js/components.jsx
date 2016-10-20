@@ -1,6 +1,24 @@
 // react components
 
 class LoadingSpinner extends React.Component {
+  static propTypes = {
+    opts: React.PropTypes.object,
+  }
+
+  static defaultProps = {
+    opts: {
+      color:'#666',
+      opacity: 0.25,
+      lines: 12, 
+      length: 25, 
+      width: 12,
+      radius: 30,
+      scale: 0.2,
+      position: 'relative',
+      className: 'spinner',
+    },
+  }
+
   render() {
     const { opts } = this.props
     return (
@@ -13,24 +31,6 @@ class LoadingSpinner extends React.Component {
       </div>
     )
   }
-}
-
-LoadingSpinner.propTypes = {
-  opts: React.PropTypes.object,
-}
-
-LoadingSpinner.defaultProps = {
-  opts: {
-    color:'#666',
-    opacity: 0.25,
-    lines: 12, 
-    length: 25, 
-    width: 12,
-    radius: 30,
-    scale: 0.2,
-    position: 'relative',
-    className: 'spinner',
-  },
 }
 
 //=======================================================
