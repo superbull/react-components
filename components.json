@@ -88,5 +88,10 @@
     "owner": "reactstrap",
     "repo": "reactstrap",
     "tags": ["framework"]
+  },
+  {
+    "owner": "ant-design",
+    "repo": "ant-design",
+    "tags": ["framework"]
   }
 ]
