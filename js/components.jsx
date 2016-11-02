@@ -20,7 +20,7 @@ class LoadingSpinner extends React.Component {
   }
 
   render() {
-    const { opts } = this.props
+    const { opts } = this.props;
     return (
       <div style={{
         padding: '20px 0',
@@ -29,7 +29,7 @@ class LoadingSpinner extends React.Component {
           new Spinner(opts).spin(spinner)
         }} />
       </div>
-    )
+    );
   }
 }
 
@@ -39,7 +39,13 @@ const NavBar = (props) => (
   <nav className="navbar navbar-default navbar-fixed-top">
     <div className="container">
       <div className="navbar-header">
-        <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <button
+          type="button"
+          className="navbar-toggle collapsed"
+          data-toggle="collapse"
+          data-target="#bs-example-navbar-collapse-1"
+          aria-expanded="false"
+        >
           <span className="sr-only">Toggle navigation</span>
           <span className="icon-bar"></span>
           <span className="icon-bar"></span>
@@ -47,7 +53,10 @@ const NavBar = (props) => (
         </button>
         <a className="navbar-brand" href="#">React Components</a>
       </div>
-      <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <div
+        className="collapse navbar-collapse"
+        id="bs-example-navbar-collapse-1"
+      >
         <ul className="nav navbar-nav">
         </ul>
         <ul className="nav navbar-nav navbar-right">
@@ -55,7 +64,7 @@ const NavBar = (props) => (
       </div>
     </div>
   </nav>
-)
+);
 
 //=======================================================
 
@@ -73,7 +82,7 @@ const SearchBar = (props) => (
       />
     </div>
   </form>
-)
+);
 
 //=======================================================
 
@@ -83,7 +92,7 @@ const TagsBar = (props) => (
       const labelClass = 
         props.selectedTags.includes(tag) ? 
         'label label-success' :
-        'label label-default'
+        'label label-default';
       return (
         <span 
           className={labelClass}
@@ -91,10 +100,10 @@ const TagsBar = (props) => (
         >
           {tag}
         </span>
-      )
+      );
     })}
   </div>
-)
+);
 
 //=======================================================
 
@@ -120,7 +129,7 @@ const SortBy = (props) => (
       </button>
     </div>
   </div>
-)
+);
 
 //=======================================================
 
@@ -150,13 +159,13 @@ const RepositoryList = (props) => (
       </li>
     ))}
   </ul>
-)
+);
 
 //=======================================================
 
 class UIRepository extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       repos: Immutable.fromJS([]),
       search: '',
@@ -164,57 +173,61 @@ class UIRepository extends React.Component {
       tags: Immutable.fromJS([]),
       selectedTags: Immutable.fromJS([]),
       sortBy: 'stargazers_count',    // full_name, stargazers_count
-    }
+    };
 
-    this.handleSearch = this.handleSearch.bind(this)
-    this.toggleTag = this.toggleTag.bind(this)
-    this.getFilteredRepos = this.getFilteredRepos.bind(this)
-    this.handleSortBy = this.handleSortBy.bind(this)
+    this.handleSearch = this.handleSearch.bind(this);
+    this.toggleTag = this.toggleTag.bind(this);
+    this.getFilteredRepos = this.getFilteredRepos.bind(this);
+    this.handleSortBy = this.handleSortBy.bind(this);
   }
 
   componentDidMount() {
     this.setState(({repos}) => ({
       isLoading: true,
-    }))
+    }));
 
     fetch(`https://raw.githubusercontent.com/superbull/react-components/master/components.json`, {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
     }).then(response => {
-      return response.json()
+      return response.json();
     }).then(repos => {
       this.setState({
-        tags: repos.reduce((pre, current) => pre.union(current.tags), Immutable.Set([]))
-      })
+        tags: repos.reduce((pre, current) => 
+            pre.union(current.tags), Immutable.Set([])
+          )
+      });
 
       Promise.all(repos.map(getRepoInfo)).then(values => {
         this.setState(({repos}) => ({
           repos: Immutable.fromJS(values),
           search: '',
           isLoading: false,
-        }))
-      })
+        }));
+      });
     }).catch(error => {
-      console.log(error)
+      console.log(error);
     })
   }
 
   handleSearch(searchText) {
     this.setState({
       search: searchText
-    })
+    });
   }
 
   toggleTag(tag) {
     if (this.state.selectedTags.includes(tag)) {
       this.setState({
-        selectedTags: this.state.selectedTags.filter(selectedTag => selectedTag != tag)
-      })
+        selectedTags: this.state.selectedTags.filter(selectedTag => 
+            selectedTag != tag
+          )
+      });
     } else {
       this.setState({
         selectedTags: this.state.selectedTags.push(tag)
-      })
+      });
     }
   }
 
@@ -223,33 +236,35 @@ class UIRepository extends React.Component {
       search,
       repos,
       selectedTags,
-    } = this.state
+    } = this.state;
 
-    let filteredRepos = repos
+    let filteredRepos = repos;
 
     // filter by tags
     if (selectedTags.size != 0) {
       filteredRepos = filteredRepos.filter(repo => {
-        const tags = repo.get('tags')
-        return selectedTags.reduce((prev, current) => prev || tags.includes(current), false)
-      })
+        const tags = repo.get('tags');
+        return selectedTags.reduce((prev, current) => 
+          prev || tags.includes(current), false
+        );
+      });
     }
 
     // filter by search
     if (search.trim() != '') {
       const fuse = new Fuse(filteredRepos.toList().toJS(), {
         keys: ['full_name', 'description'],
-      })
-      filteredRepos = Immutable.fromJS(fuse.search(search.trim()))
+      });
+      filteredRepos = Immutable.fromJS(fuse.search(search.trim()));
     }
 
-    return filteredRepos
+    return filteredRepos;
   }
 
   handleSortBy(sortBy) {
     this.setState({
       sortBy: sortBy,
-    })
+    });
   }
 
   render() {
@@ -260,17 +275,17 @@ class UIRepository extends React.Component {
       tags,
       selectedTags,
       sortBy,
-    } = this.state
+    } = this.state;
 
-    const Loading = isLoading ? <LoadingSpinner /> : ''
+    const Loading = isLoading ? <LoadingSpinner /> : '';
 
-    const filteredRepos = this.getFilteredRepos()
+    const filteredRepos = this.getFilteredRepos();
     const sortedRepos = sortBy == 'stargazers_count' ? 
       filteredRepos.sortBy(
         repo => repo.get('stargazers_count'),
         (a, b) => b - a
       ) :
-      filteredRepos.sortBy(repo => repo.get('full_name').toLowerCase())
+      filteredRepos.sortBy(repo => repo.get('full_name').toLowerCase());
 
     return (
       <div>
@@ -299,6 +314,6 @@ class UIRepository extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

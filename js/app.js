@@ -4,16 +4,16 @@ const getRepoInfo = function(repo) {
     mode: 'cors',
     cache: 'no-cache',
   }).then(function (response) {
-    return response.json()
+    return response.json();
   }).then(function (data) {
-    data.tags = repo.tags
-    return data
+    data.tags = repo.tags;
+    return data;
   }).catch(function(error) {
-    console.log(error)
-  })
-}
+    console.log(error);
+  });
+};
 
 ReactDOM.render(
   <UIRepository />,
   document.getElementById('app')
-)
+);
